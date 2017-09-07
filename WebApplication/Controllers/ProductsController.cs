@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication.Data;
 using WebApplication.Models;
 using Microsoft.Extensions.Logging;
+using WebApplication.Services;
 
 namespace WebApplication.Controllers
 {
@@ -15,11 +16,16 @@ namespace WebApplication.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<ProductsController> _logger;
+        private readonly ProductCategoryService _productCategoryService;
 
-        public ProductsController(ApplicationDbContext context, ILogger<ProductsController> logger)
+        public ProductsController(
+            ApplicationDbContext context, 
+            ILogger<ProductsController> logger,
+            ProductCategoryService productCategoryService)
         {
             _context = context;
             _logger = logger;
+            _productCategoryService = productCategoryService;
         }
 
         // GET: Products
@@ -53,7 +59,7 @@ namespace WebApplication.Controllers
         {
             var model = new CreateEditProductViewModel();
 
-            model.ProductCategories = _context.ProductCategory.Select(x => new SelectListItem { Text = x.Name, Value = x.ProductCategoryId.ToString() }).ToList();
+            model.ProductCategories = _productCategoryService.GetSelectList();
 
             return View(model);
 
@@ -91,12 +97,9 @@ namespace WebApplication.Controllers
 
             var model = new CreateEditProductViewModel();
 
-            model.ProductCategories = 
-                _context.ProductCategory
-                .Select(x => new SelectListItem {
-                    Text = x.Name, Value = x.ProductCategoryId.ToString(),
-                    Selected = product.ProductCategoryId == x.ProductCategoryId
-                })
+            model.ProductCategories = model.ProductCategories = _productCategoryService.GetSelectList(product.ProductCategoryId);
+            _context.ProductCategory
+                
                 .ToList();
 
             model.Product = product;
