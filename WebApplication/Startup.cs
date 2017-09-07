@@ -40,7 +40,6 @@ namespace WebApplication
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
-            services.AddLogging();
             services.AddTransient<ProductCategoryService>();
 
             services.AddLocalization(opts => { opts.ResourcesPath = "Resources"; });
