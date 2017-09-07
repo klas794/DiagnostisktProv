@@ -24,5 +24,7 @@ namespace WebApplication.Data
 
             builder.Entity<Product>();
         }
+
+        public DbSet<WebApplication.Models.Product> Product { get; set; }
     }
 }
