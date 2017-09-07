@@ -46,7 +46,12 @@ namespace WebApplication.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            return View();
+            var model = new CreateEditProductViewModel();
+
+            model.ProductCategories = _context.ProductCategory.Select(x => new SelectListItem { Text = x.Name, Value = x.ProductCategoryId.ToString() }).ToList();
+
+            return View(model);
+
         }
 
         // POST: Products/Create
@@ -54,15 +59,15 @@ namespace WebApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,Name,Price")] Product product)
+        public async Task<IActionResult> Create(CreateEditProductViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
+                _context.Add(model.Product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
+            return View(model);
         }
 
         // GET: Products/Edit/5
@@ -78,7 +83,14 @@ namespace WebApplication.Controllers
             {
                 return NotFound();
             }
-            return View(product);
+
+            var model = new CreateEditProductViewModel();
+
+            model.ProductCategories = _context.ProductCategory.Select(x => new SelectListItem { Text = x.Name, Value = x.ProductCategoryId.ToString() }).ToList();
+
+            model.Product = product;
+
+            return View(model);
         }
 
         // POST: Products/Edit/5
@@ -86,9 +98,9 @@ namespace WebApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Price")] Product product)
+        public async Task<IActionResult> Edit(int id, CreateEditProductViewModel model)
         {
-            if (id != product.ProductId)
+            if (id != model.Product.ProductId)
             {
                 return NotFound();
             }
@@ -97,12 +109,12 @@ namespace WebApplication.Controllers
             {
                 try
                 {
-                    _context.Update(product);
+                    _context.Update(model.Product);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.ProductId))
+                    if (!ProductExists(model.Product.ProductId))
                     {
                         return NotFound();
                     }
@@ -113,7 +125,7 @@ namespace WebApplication.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
+            return View(model);
         }
 
         // GET: Products/Delete/5
