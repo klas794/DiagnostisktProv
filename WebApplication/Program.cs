@@ -21,6 +21,7 @@ namespace WebApplication
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
+                
                 try
                 {
                     var context = services.GetRequiredService<ApplicationDbContext>();
@@ -39,6 +40,12 @@ namespace WebApplication
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .ConfigureLogging((hostingContext, logging) =>
+                {
+                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    logging.AddConsole();
+                    logging.AddDebug();
+                })
                 .Build();
     }
 }

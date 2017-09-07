@@ -7,21 +7,26 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplication.Data;
 using WebApplication.Models;
+using Microsoft.Extensions.Logging;
 
 namespace WebApplication.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(ApplicationDbContext context)
+        public ProductsController(ApplicationDbContext context, ILogger<ProductsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Products
         public async Task<IActionResult> Index()
         {
+            _logger.LogInformation("With great powers come great responsibility");
+
             return View(await _context.Product.ToListAsync());
         }
 

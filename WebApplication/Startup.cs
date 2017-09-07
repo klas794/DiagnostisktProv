@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using WebApplication.Data;
 using WebApplication.Models;
 using WebApplication.Services;
+using WebApplication.Controllers;
+using Microsoft.Extensions.Logging;
 
 namespace WebApplication
 {
@@ -35,6 +37,7 @@ namespace WebApplication
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddLogging();
 
             services.AddMvc();
         }
