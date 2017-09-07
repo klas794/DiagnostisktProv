@@ -23,8 +23,10 @@ namespace WebApplication.Data
             // Add your customizations after calling base.OnModelCreating(builder);
 
             builder.Entity<Product>();
+            builder.Entity<ProductCategory>();
         }
 
         public DbSet<WebApplication.Models.Product> Product { get; set; }
+        public DbSet<WebApplication.Models.ProductCategory> ProductCategory { get; set; }
     }
 }
