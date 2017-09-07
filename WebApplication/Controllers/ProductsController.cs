@@ -86,7 +86,13 @@ namespace WebApplication.Controllers
 
             var model = new CreateEditProductViewModel();
 
-            model.ProductCategories = _context.ProductCategory.Select(x => new SelectListItem { Text = x.Name, Value = x.ProductCategoryId.ToString() }).ToList();
+            model.ProductCategories = 
+                _context.ProductCategory
+                .Select(x => new SelectListItem {
+                    Text = x.Name, Value = x.ProductCategoryId.ToString(),
+                    Selected = product.ProductCategoryId == x.ProductCategoryId
+                })
+                .ToList();
 
             model.Product = product;
 
