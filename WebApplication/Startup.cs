@@ -13,6 +13,9 @@ using WebApplication.Models;
 using WebApplication.Services;
 using WebApplication.Controllers;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace WebApplication
 {
@@ -40,7 +43,14 @@ namespace WebApplication
             services.AddLogging();
             services.AddTransient<ProductCategoryService>();
 
-            services.AddMvc();
+            services.AddLocalization(opts => { opts.ResourcesPath = "Resources"; });
+
+            services.AddMvc()
+                .AddViewLocalization(
+                    LanguageViewLocationExpanderFormat.Suffix,
+                    opts => { opts.ResourcesPath = "Resources"; })
+                .AddDataAnnotationsLocalization();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,6 +66,21 @@ namespace WebApplication
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            var cultureEn = new CultureInfo("en-US");
+
+            var supportedCultures = new[] {
+                cultureEn
+            };
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(cultureEn),
+                // Formatting numbers, dates, etc.
+                SupportedCultures = supportedCultures,
+                // UI strings that we have localized.
+                SupportedUICultures = supportedCultures
+            });
 
             app.UseStaticFiles();
 
