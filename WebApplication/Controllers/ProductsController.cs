@@ -97,7 +97,7 @@ namespace WebApplication.Controllers
 
             var model = new CreateEditProductViewModel();
 
-            model.ProductCategories = model.ProductCategories = _productCategoryService.GetSelectList(product.ProductCategoryId);
+            model.ProductCategories = _productCategoryService.GetSelectList(product.ProductCategoryId);
 
             model.Product = product;
 
